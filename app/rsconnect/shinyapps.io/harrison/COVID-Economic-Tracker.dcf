@@ -1,0 +1,12 @@
+name: COVID-Economic-Tracker
+title: COVID-Economic-Tracker
+username:
+account: harrison
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2671485
+bundleId: 3517224
+url: https://harrison.shinyapps.io/COVID-Economic-Tracker/
+when: 1597431877.68171
+asMultiple: FALSE
+asStatic: FALSE

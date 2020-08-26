@@ -1,0 +1,52 @@
+---
+title: "Opportunity Insights Economic Tracker"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(glptools)
+glp_load_packages()
+```
+
+```{r}
+save(FIPS_df, file = "app/R/FIPS_df.RData")
+```
+
+```{r read_files}
+consumer_spending <- read_csv("EconomicTracker/data/Affinity - County - Daily.csv", 
+                              col_types = "nnnnn", na = ".")
+
+small_business_revenue <- read_csv("EconomicTracker/data/Womply Revenue - County - Daily.csv",
+                              col_types = "nnnnn", na = ".")
+
+small_business_open <- read_csv("EconomicTracker/data/Womply Merchants - County - Daily.csv",
+                              col_types = "nnnnn", na = ".")
+
+unemployment_claims <- read_csv("EconomicTracker/data/UI Claims - County - Weekly.csv",
+                              col_types = "nnnnnn", na = ".")
+
+time_outside_home <- read_csv("EconomicTracker/data/Google Mobility - County - Daily.csv",
+                              col_types = "nnnnnnnnnnn", na = ".")
+
+unemployment_claims %<>% rename(day = day_endofweek)
+
+covid <- reduce(list(consumer_spending, small_business_revenue, small_business_open,
+                     unemployment_claims, time_outside_home), 
+                full_join, by = c("year", "month", "day", "countyfips"))
+
+covid %<>% 
+  rename(FIPS = countyfips) %>% 
+  pull_peers() %>%
+  transmute(
+    FIPS, #race = "total", sex = "total",
+    date = lubridate::dmy(paste0(day, "-", month, "-", year)),
+    consumer_spending = spend_all * 100,
+    small_business_revenue = revenue_all * 100,
+    small_business_open = merchants_all * 100,
+    unemployment_claims_rate = initial_claims_rate * 100,
+    time_away_from_home = gps_away_from_home * 100,
+    year = 2019) %>%
+  stl_merge(consumer_spending:time_away_from_home, other_grouping_vars = "date")
+
+save(covid, file = "app/R/covid.RData")
+```

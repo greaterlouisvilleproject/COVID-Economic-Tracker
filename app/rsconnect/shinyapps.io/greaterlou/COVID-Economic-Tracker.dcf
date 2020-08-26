@@ -1,0 +1,12 @@
+name: COVID-Economic-Tracker
+title: COVID-Economic-Tracker
+username:
+account: greaterlou
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2677251
+bundleId: 3560829
+url: https://greaterlou.shinyapps.io/COVID-Economic-Tracker/
+when: 1598465000.76039
+asMultiple: FALSE
+asStatic: FALSE
